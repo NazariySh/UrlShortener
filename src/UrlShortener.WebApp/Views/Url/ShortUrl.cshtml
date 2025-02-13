@@ -1,0 +1,33 @@
+﻿<div class="text-center">
+    <h2>Your shortened URL</h2>
+    <p>Copy the short link and share it in messages, texts, posts, websites, and other locations.</p>
+</div>
+
+<div class="d-flex justify-content-center align-items-center">
+    <div class="card shadow-lg px-4 py-5 rounded" style="width: 42rem;">
+        <div class="card-body text-center m-3">
+            <div class="input-group mb-3">
+                <input type="text" id="copyText" class="form-control" value="@Model.ShortUrl" readonly>
+                <button class="btn btn-primary" onclick="copyText()">Copy URL</button>
+            </div>
+
+            <div class="d-flex flex-column mt-3">
+                <p class="card-text mb-3">Long URL: <a href="@Model.OriginalUrl" target="_blank">@Model.OriginalUrl</a></p>
+                <a asp-action="Index" class="btn btn-outline-primary">Shorten another URL</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function copyText() {
+            const input = document.getElementById("copyText");
+            input.select();
+            input.setSelectionRange(0, 99999);
+
+            navigator.clipboard.writeText(input.value)
+                .catch(err => console.error("Error copying text:", err));
+        }
+    </script>
+}
