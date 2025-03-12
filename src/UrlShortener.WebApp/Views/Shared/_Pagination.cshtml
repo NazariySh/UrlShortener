@@ -1,0 +1,62 @@
+﻿@model PaginationViewModel
+
+@{
+    if (Model.TotalPages <= 1)
+    {
+        return;
+    }
+}
+
+<nav class="mt-3" aria-label="Page navigation">
+    <ul class="pagination d-flex gap-2">
+        @if (Model.HasPreviousPage)
+        {
+            <li class="page-item">
+                <a href="@Url.Action(Model.Action, new { search = Model.Search, pageNumber = Model.PageNumber - 1, pageSize = Model.PageSize })"
+                   class="btn btn-outline-primary">
+                    <i class="bi bi-chevron-left"></i> Previous
+                </a>
+            </li>
+        }
+
+        @if (Model.IsFarFromFirstPage)
+        {
+            <li class="page-item">
+                <a href="@Url.Action(Model.Action, new { search = Model.Search, pageNumber = 1, pageSize = Model.PageSize })"
+                   class="btn btn-outline-primary">1</a>
+            </li>
+            <li class="page-item">...</li>
+        }
+
+        @foreach (var number in Enumerable.Range(Model.StartPage, Model.EndPage - Model.StartPage + 1))
+        {
+            <li class="page-item">
+                <a href="@Url.Action(Model.Action, new { search = Model.Search, pageNumber = number, pageSize = Model.PageSize })"
+                   class="btn @(number == Model.PageNumber ? "btn-primary" : "btn-outline-primary")">
+                    @number
+                </a>
+            </li>
+        }
+
+        @if (Model.IsFarFromLastPage)
+        {
+            <li class="page-item">...</li>
+            <li class="page-item">
+                <a href="@Url.Action(Model.Action, new { search = Model.Search, pageNumber = Model.TotalPages, pageSize = Model.PageSize })"
+                   class="btn btn-outline-primary">
+                    @Model.TotalPages
+                </a>
+            </li>
+        }
+        
+        @if (Model.HasNextPage)
+        {
+            <li class="page-item">
+                <a href="@Url.Action(Model.Action, new { search = Model.Search, pageNumber = Model.PageNumber + 1, pageSize = Model.PageSize })"
+                   class="btn btn-outline-primary">
+                    Next <i class="bi bi-chevron-right"></i>
+                </a>
+            </li>
+        }
+    </ul>
+</nav>

@@ -3,16 +3,16 @@ using UrlShortener.Application.Interfaces;
 
 namespace UrlShortener.Infrastructure.Services;
 
-public class CacheService : ICacheService
+public class HybridCacheService : ICacheService
 {
     private readonly HybridCache _cache;
 
-    public CacheService(HybridCache cache)
+    public HybridCacheService(HybridCache cache)
     {
         _cache = cache ?? throw new ArgumentNullException(nameof(cache));
     }
 
-    public async ValueTask<T> GetOrAddAsync<T>(
+    public async ValueTask<T> GetOrCreateAsync<T>(
         string key,
         Func<CancellationToken, ValueTask<T>> fetchFunc,
         TimeSpan? expiration = null,
@@ -20,13 +20,34 @@ public class CacheService : ICacheService
     {
         ArgumentException.ThrowIfNullOrEmpty(key);
 
-        var options = expiration is null
-            ? null
-            : new HybridCacheEntryOptions { Expiration = expiration };
+        var options = new HybridCacheEntryOptions
+        {
+            Expiration = expiration
+        };
 
         return await _cache.GetOrCreateAsync(
             key,
             fetchFunc,
+            options,
+            cancellationToken: cancellationToken);
+    }
+
+    public async Task SetAsync<T>(
+        string key,
+        T value,
+        TimeSpan? expiration = null,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(key);
+
+        var options = new HybridCacheEntryOptions
+        {
+            Expiration = expiration
+        };
+
+        await _cache.SetAsync(
+            key,
+            value,
             options,
             cancellationToken: cancellationToken);
     }

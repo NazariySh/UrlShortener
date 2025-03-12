@@ -5,7 +5,7 @@ namespace UrlShortener.Application.Services;
 public class UniqueCodeGenerator : IUniqueCodeGenerator
 {
     public const int UniqueCodeLength = 7;
-    private const string UniqueCodeCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    public const string UniqueCodeCharacters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
     public string Generate()
     {
@@ -16,7 +16,6 @@ public class UniqueCodeGenerator : IUniqueCodeGenerator
         for (var i = 0; i < UniqueCodeLength; i++)
         {
             var randomIndex = random.Next(UniqueCodeCharacters.Length);
-
             codeChars[i] = UniqueCodeCharacters[randomIndex];
         }
 

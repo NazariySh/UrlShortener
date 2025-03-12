@@ -1,10 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using UrlShortener.Domain.Entities;
 using UrlShortener.Infrastructure.Configurations;
 
 namespace UrlShortener.Infrastructure.Data;
 
-public class ApplicationDbContext : DbContext
+public class ApplicationDbContext : IdentityDbContext<User, IdentityRole<Guid>, Guid>
 {
     public ApplicationDbContext()
     {
@@ -21,6 +23,6 @@ public class ApplicationDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        modelBuilder.ApplyConfiguration(new ShortenedUrlConfiguration());
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(ShortenedUrlConfiguration).Assembly);
     }
 }

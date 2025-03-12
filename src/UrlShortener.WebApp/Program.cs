@@ -1,33 +1,49 @@
+using Microsoft.AspNetCore.Identity;
 using UrlShortener.Application.Extensions;
 using UrlShortener.Infrastructure.Extensions;
+using UrlShortener.WebApp.Extensions;
+using UrlShortener.WebApp.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.AddService<CustomExceptionFilter>();
+});
+
+builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Auth/Login";
+        options.AccessDeniedPath = "/Auth/AccessDenied";
+    });
 
 builder.Services.AddHttpContextAccessor();
-builder.Services.AddApplication();
-builder.Services.AddInfrastructure(builder.Configuration);
+
+builder.Services
+    .AddApplication()
+    .AddInfrastructure(builder.Configuration);
+
+builder.Services.AddSingleton<CustomExceptionFilter>();
 
 var app = builder.Build();
 
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts();
-}
+app.UseExceptionHandler("/Home/Error");
+app.UseHsts();
 
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
 
+await app.InitializeDatabaseAsync();
+
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Url}/{action=Index}/{id?}")
+    pattern: "{area=User}/{controller=Home}/{action=Index}/{id?}")
     .WithStaticAssets();
-
 
 app.Run();

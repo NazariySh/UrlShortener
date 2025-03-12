@@ -1,0 +1,30 @@
+﻿@model AccountViewModel
+
+<h2>Account Information</h2>
+
+<div class="card">
+    <div class="card-body">
+        <h4>User Information</h4>
+
+        <div class="mb-3">
+            <strong>Email:</strong> @Model.User.Email
+        </div>
+        
+        @if (User.IsAdmin())
+        {
+            <div class="mb-3">
+                <strong>Roles:</strong>
+                <ul>
+                    @foreach (var role in Model.User.Roles)
+                    {
+                        <li>@role</li>
+                    }
+                </ul>
+            </div>
+        }
+
+        <form method="post" asp-action="Delete" asp-route-id="@Model.User.Id" class="d-inline mt-2">
+            <button type="submit" class="btn btn-danger">Delete Account</button>
+        </form>
+    </div>
+</div>

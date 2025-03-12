@@ -6,7 +6,7 @@ using UrlShortener.Domain.Entities;
 
 namespace UrlShortener.Infrastructure.Configurations;
 
-public class ShortenedUrlConfiguration : IEntityTypeConfiguration<ShortenedUrl>
+internal sealed class ShortenedUrlConfiguration : IEntityTypeConfiguration<ShortenedUrl>
 {
     public void Configure(EntityTypeBuilder<ShortenedUrl> builder)
     {

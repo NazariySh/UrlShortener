@@ -1,10 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using UrlShortener.Application.Interfaces;
+using UrlShortener.Domain.Entities;
 using UrlShortener.Domain.Repositories;
 using UrlShortener.Infrastructure.Data;
+using UrlShortener.Infrastructure.Data.DbInitializer;
 using UrlShortener.Infrastructure.Repositories;
 using UrlShortener.Infrastructure.Services;
 
@@ -17,9 +20,22 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(options =>
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection")));
 
+        services.AddIdentity<User, IdentityRole<Guid>>(options =>
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireDigit = true;
+                options.Password.RequireNonAlphanumeric = false;
+            })
+            .AddEntityFrameworkStores<ApplicationDbContext>()
+            .AddDefaultTokenProviders();
+
         services.AddRedisCache(configuration);
 
-        services.AddScoped<ICacheService, CacheService>();
+        services.AddScoped<IDbInitializer, DbInitializer>();
+
+        services.AddScoped<ICacheService, HybridCacheService>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;

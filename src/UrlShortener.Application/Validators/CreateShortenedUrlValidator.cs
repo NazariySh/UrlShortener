@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using FluentValidation;
 using System.Text.RegularExpressions;
-using UrlShortener.Application.DTOs;
+using UrlShortener.Application.DTOs.ShortenedUrl;
 
 namespace UrlShortener.Application.Validators;
 

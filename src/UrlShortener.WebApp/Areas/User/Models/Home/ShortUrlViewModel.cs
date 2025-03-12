@@ -1,4 +1,4 @@
-﻿namespace UrlShortener.WebApp.Models;
+﻿namespace UrlShortener.WebApp.Areas.User.Models.Home;
 
 public class ShortUrlViewModel
 {
