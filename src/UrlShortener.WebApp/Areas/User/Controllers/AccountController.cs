@@ -12,10 +12,14 @@ namespace UrlShortener.WebApp.Areas.User.Controllers;
 public class AccountController : Controller
 {
     private readonly IUserService _userService;
+    private readonly IAuthService _authService;
 
-    public AccountController(IUserService userService)
+    public AccountController(
+        IUserService userService,
+        IAuthService authService)
     {
         _userService = userService ?? throw new ArgumentNullException(nameof(userService));
+        _authService = authService ?? throw new ArgumentNullException(nameof(authService));
     }
 
     [HttpGet]
@@ -38,6 +42,8 @@ public class AccountController : Controller
         var id = User.GetId();
 
         await _userService.DeleteAsync(id, cancellationToken);
+
+        await _authService.LogoutAsync();
 
         TempData["SuccessNotification"] = "My account deleted successfully.";
 

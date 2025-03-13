@@ -1,4 +1,4 @@
-﻿namespace UrlShortener.Infrastructure.Data.DbInitializer;
+﻿namespace UrlShortener.Infrastructure.Data.Initializers;
 
 public interface IDbInitializer
 {

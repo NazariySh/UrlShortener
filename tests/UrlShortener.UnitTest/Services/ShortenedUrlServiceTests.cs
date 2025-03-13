@@ -297,14 +297,6 @@ public class ShortenedUrlServiceTests
         };
     }
 
-    private void SetupMockValidator()
-    {
-        _mockValidator.Setup(p => p.ValidateAsync(
-                It.Is<ValidationContext<CreateShortenedUrlDto>>(context => context.ThrowOnFailures),
-                default))
-            .ReturnsAsync(new FluentValidation.Results.ValidationResult());
-    }
-
     private void SetupMockValidatorThrowsValidationException()
     {
         _mockValidator.Setup(p => p.ValidateAsync(

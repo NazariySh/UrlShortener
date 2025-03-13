@@ -10,6 +10,8 @@ internal sealed class ShortenedUrlConfiguration : IEntityTypeConfiguration<Short
 {
     public void Configure(EntityTypeBuilder<ShortenedUrl> builder)
     {
+        builder.ToTable("ShortenedUrls");
+
         builder.HasKey(e => e.Id);
 
         builder.Property(x => x.Id)
@@ -32,5 +34,10 @@ internal sealed class ShortenedUrlConfiguration : IEntityTypeConfiguration<Short
             .HasDefaultValueSql("GETUTCDATE()");
 
         builder.HasIndex(x => x.UniqueCode).IsUnique();
+
+        builder.HasOne(x => x.User)
+            .WithMany()
+            .HasForeignKey(x => x.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

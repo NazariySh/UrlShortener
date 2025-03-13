@@ -6,8 +6,6 @@
             <h2 class="card-title mb-3">Paste the URL to be shortened</h2>
 
             <form asp-action="Index" method="post">
-                <span asp-validation-summary="All" class="text-danger"></span>
-
                 <div class="input-group mb-3">
                     <input asp-for="OriginalUrl"
                            class="form-control"

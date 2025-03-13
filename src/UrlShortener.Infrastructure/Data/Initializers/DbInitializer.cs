@@ -1,22 +1,27 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using UrlShortener.Application.DTOs.Users;
 using UrlShortener.Application.Interfaces;
 using UrlShortener.Domain.Enums;
+using UrlShortener.Domain.Settings;
 
-namespace UrlShortener.Infrastructure.Data.DbInitializer;
+namespace UrlShortener.Infrastructure.Data.Initializers;
 
 public class DbInitializer : IDbInitializer
 {
+    private readonly AdminSettings _adminSettings;
     private readonly ApplicationDbContext _dbContext;
     private readonly IUserService _userService;
     private readonly ILogger<DbInitializer> _logger;
 
     public DbInitializer(
+        IOptions<AdminSettings> adminSettings,
         ApplicationDbContext dbContext,
         IUserService userService,
         ILogger<DbInitializer> logger)
     {
+        _adminSettings = adminSettings.Value ?? throw new ArgumentNullException(nameof(adminSettings));
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
         _userService = userService ?? throw new ArgumentNullException(nameof(userService));
         _logger = logger ?? throw new ArgumentNullException(nameof(logger));
@@ -25,8 +30,7 @@ public class DbInitializer : IDbInitializer
     public async Task InitializeAsync(CancellationToken cancellationToken = default)
     {
         await ApplyMigrationsAsync(cancellationToken);
-
-        await SeedAdminAsync();
+        await SeedAdminAsync(cancellationToken);
     }
 
     private async Task ApplyMigrationsAsync(CancellationToken cancellationToken)
@@ -46,19 +50,23 @@ public class DbInitializer : IDbInitializer
         }
     }
 
-    private async Task SeedAdminAsync()
+    private async Task SeedAdminAsync(CancellationToken cancellationToken)
     {
-        const string email = "admin@gmail.com";
-
-        if (_dbContext.Users.Any(x => x.UserName == email))
+        if (await _dbContext.Users.AnyAsync(x => x.UserName == _adminSettings.Email, cancellationToken))
         {
             return;
         }
 
-        const string password = "Admin123*";
+        var registerDto = new RegisterDto(_adminSettings.Email, _adminSettings.Password);
 
-        var registerDto = new RegisterDto(email, password);
-
-        await _userService.CreateAsync(registerDto, RoleType.Admin);
+        try
+        {
+            await _userService.CreateAsync(registerDto, RoleType.Admin, cancellationToken);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while seeding the admin user.");
+            throw;
+        }
     }
 }

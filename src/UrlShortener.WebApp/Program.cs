@@ -18,6 +18,8 @@ builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
         options.AccessDeniedPath = "/Auth/AccessDenied";
     });
 
+builder.Services.AddAuthorization();
+
 builder.Services.AddHttpContextAccessor();
 
 builder.Services
@@ -27,6 +29,8 @@ builder.Services
 builder.Services.AddSingleton<CustomExceptionFilter>();
 
 var app = builder.Build();
+
+await app.InitializeAsync();
 
 app.UseExceptionHandler("/Home/Error");
 app.UseHsts();
@@ -38,8 +42,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
-
-await app.InitializeDatabaseAsync();
 
 app.MapControllerRoute(
     name: "default",

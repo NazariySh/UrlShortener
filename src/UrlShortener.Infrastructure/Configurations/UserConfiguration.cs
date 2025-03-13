@@ -15,8 +15,6 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.Id)
             .ValueGeneratedOnAdd();
 
-        builder.HasKey(x => x.Id);
-
         builder.Property(x => x.Email)
             .HasMaxLength(100)
             .IsRequired();

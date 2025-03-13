@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Polly;
 using System.Diagnostics;
 using UrlShortener.Application.DTOs.ShortenedUrl;
 using UrlShortener.Application.Interfaces;

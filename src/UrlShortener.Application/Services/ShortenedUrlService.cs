@@ -133,8 +133,6 @@ public class ShortenedUrlService : IShortenedUrlService
             throw new ArgumentException("User Id cannot be empty!", nameof(userId));
         }
 
-        Console.WriteLine(search);
-
         var urls = await _unitOfWork.ShortenedUrls.GetAllPaginatedAsync(
             pageNumber,
             pageSize,

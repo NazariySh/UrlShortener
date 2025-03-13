@@ -1,10 +1,10 @@
-﻿using UrlShortener.Infrastructure.Data.DbInitializer;
+﻿using UrlShortener.Infrastructure.Data.Initializers;
 
 namespace UrlShortener.WebApp.Extensions;
 
 public static class ApplicationBuilderExtensions
 {
-    public static async Task<IApplicationBuilder> InitializeDatabaseAsync(this IApplicationBuilder app)
+    public static async Task<IApplicationBuilder> InitializeAsync(this IApplicationBuilder app)
     {
         using var scope = app.ApplicationServices.CreateScope();
 

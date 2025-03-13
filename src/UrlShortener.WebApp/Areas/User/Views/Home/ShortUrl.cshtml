@@ -13,7 +13,7 @@
                 <button class="btn btn-primary" onclick="copyText()">Copy URL</button>
             </div>
 
-            <div class="d-flex flex-column mt-3">
+            <div class="d-flex flex-column align-items-left mt-3">
                 <p class="card-text mb-3">
                     Long URL: <a href="@Model.OriginalUrl" target="_blank">@Model.OriginalUrl</a>
                 </p>
@@ -26,6 +26,9 @@
 </div>
 
 @section Scripts {
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+
     <script>
         function copyText() {
             const input = document.getElementById("copyText");
@@ -33,6 +36,16 @@
             input.setSelectionRange(0, 99999);
 
             navigator.clipboard.writeText(input.value)
+                .then(() => {
+                    toastr.options = {
+                        "closeButton": true,
+                        "progressBar": true,
+                        "positionClass": "toast-bottom-right",
+                        "timeOut": "5000",
+                        "extendedTimeOut": "1000"
+                    };
+                    toastr.success('Text copied!');
+                })
                 .catch(err => console.error("Error copying text:", err));
         }
     </script>
