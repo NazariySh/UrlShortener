@@ -1,0 +1,31 @@
+﻿@if (TempData["ErrorNotification"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            "timeOut": "10000",
+            "extendedTimeOut": "1000"
+        };
+        toastr.error('@Html.Raw(TempData["ErrorNotification"])');
+    </script>
+}
+
+@if (TempData["SuccessNotification"] != null)
+{
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script type="text/javascript">
+        toastr.options = {
+            "closeButton": true,
+            "progressBar": true,
+            "positionClass": "toast-bottom-right",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000"
+        };
+        toastr.success('@Html.Raw(TempData["SuccessNotification"])');
+    </script>
+}

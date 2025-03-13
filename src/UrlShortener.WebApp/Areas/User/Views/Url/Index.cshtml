@@ -1,0 +1,80 @@
+﻿@model UrlListViewModel
+
+<div class="d-flex flex-column gap-1">
+    <h2 class="page-title">My Shortened Urls</h2>
+    <nav class="nav-breadcrumb" aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
+            </li>
+            <li class="breadcrumb-item active" aria-current="page">
+                My Urls
+            </li>
+        </ol>
+    </nav>
+</div>
+
+<div class="row">
+    <div class="col-md-6 col-sm-12">
+        <form method="get" asp-action="Index">
+            <div class="input-group">
+                <input type="text" class="form-control" name="search" value="@Model.Search" placeholder="Search..." />
+                <button class="btn btn-primary" type="submit">
+                    <i class="bi bi-search"></i> Search
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-6 col-sm-12 text-end">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-primary p-2">
+            <i class="bi bi-plus-circle mx-2"></i> Create New Url
+        </a>
+    </div>
+</div>
+
+<div class="card mt-2">
+    <div class="card-body">
+        <div class="row pb-3">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>Long Url</th>
+                    <th>Short Url</th>
+                    <th>Clicks</th>
+                    <th>Creation Date</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var url in Model.Urls)
+                {
+                    <tr>
+                        <td>@url.LongUrl</td>
+                        <td>@url.ShortUrl.ToLower()</td>
+                        <td>@url.Clicks</td>
+                        <td>@url.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy")</td>
+                        <td>
+                            <div class="dropdown">
+                                <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-three-dots"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li>
+                                        <form asp-action="Delete" method="post" asp-route-uniqueCode="@url.UniqueCode"
+                                              onsubmit="return confirm('Are you sure you want to delete this url?');">
+                                            <button type="submit" class="dropdown-item text-danger">Delete</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex justify-content-center">
+    <partial name="_Pagination" model="Model.Pagination" />
+</div>
